@@ -5,30 +5,70 @@
  */
 public class DisjointSet {
 
+    private final int[] parent;
+    private final int[] size;
+    private int setCount;
+
     public DisjointSet(int n) {
-        // TODO
+        if (n < 0) {
+            throw new IllegalArgumentException("number of elements cannot be negative");
+        }
+        parent = new int[n];
+        size = new int[n];
+        setCount = n;
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
     }
 
     /** The root of the set that contains x. */
     public int find(int x) {
-        // TODO
-        return x;
+        checkElement(x);
+
+        int root = x;
+        while (root != parent[root]) {
+            root = parent[root];
+        }
+        while (x != root) {
+            int next = parent[x];
+            parent[x] = root;
+            x = next;
+        }
+        return root;
     }
 
     /** Joins the sets of a and b. Returns true if they were different sets, false if they were already one set. */
     public boolean union(int a, int b) {
-        // TODO
-        return false;
+        int rootA = find(a);
+        int rootB = find(b);
+        if (rootA == rootB) {
+            return false;
+        }
+
+        if (size[rootA] < size[rootB]) {
+            int temp = rootA;
+            rootA = rootB;
+            rootB = temp;
+        }
+        parent[rootB] = rootA;
+        size[rootA] += size[rootB];
+        setCount--;
+        return true;
     }
 
     public boolean connected(int a, int b) {
-        // TODO
-        return false;
+        return find(a) == find(b);
     }
 
     /** Number of sets now. */
     public int count() {
-        // TODO
-        return 0;
+        return setCount;
+    }
+
+    private void checkElement(int x) {
+        if (x < 0 || x >= parent.length) {
+            throw new IndexOutOfBoundsException("element index out of range: " + x);
+        }
     }
 }

@@ -86,7 +86,43 @@ public class Zones {
      * [1] the cost of the cheapest route from the zone of cell 0 to the zone of the last cell.
      */
     public static long[] routes(Input.Slides s, int[] zoneOf, int zoneCount) {
-        // TODO
-        return new long[]{0, 0};
+        if (zoneCount == 0) {
+            return new long[]{0, 0};
+        }
+
+        java.util.ArrayList<java.util.HashMap<Integer, Integer>> edges = new java.util.ArrayList<>(zoneCount);
+        for (int z = 0; z < zoneCount; z++) {
+            edges.add(new java.util.HashMap<>());
+        }
+        for (int i = 0; i < s.count(); i++) {
+            int fromZone = zoneOf[s.from()[i]];
+            int toZone = zoneOf[s.to()[i]];
+            if (fromZone != toZone) {
+                edges.get(fromZone).merge(toZone, s.time()[i], Math::min);
+            }
+        }
+
+        long[] longestStages = new long[zoneCount];
+        long[] fastestCost = new long[zoneCount];
+        java.util.Arrays.fill(longestStages, 1);
+        java.util.Arrays.fill(fastestCost, Long.MAX_VALUE);
+        int startZone = zoneOf[0];
+        int exitZone = zoneOf[s.n() - 1];
+        fastestCost[startZone] = 0;
+
+        long maxStages = 1;
+        for (int zone = 0; zone < zoneCount; zone++) {
+            for (java.util.Map.Entry<Integer, Integer> edge : edges.get(zone).entrySet()) {
+                int nextZone = edge.getKey();
+                int cost = edge.getValue();
+                longestStages[nextZone] = Math.max(longestStages[nextZone], longestStages[zone] + 1);
+                maxStages = Math.max(maxStages, longestStages[nextZone]);
+                if (fastestCost[zone] != Long.MAX_VALUE) {
+                    fastestCost[nextZone] = Math.min(fastestCost[nextZone], fastestCost[zone] + cost);
+                }
+            }
+        }
+        long routeCost = fastestCost[exitZone] == Long.MAX_VALUE ? 0 : fastestCost[exitZone];
+        return new long[]{maxStages, routeCost};
     }
 }

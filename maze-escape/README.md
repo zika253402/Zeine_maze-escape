@@ -51,11 +51,11 @@ ChatGPT helped explain the assignment and implement Missions 0–5. No external 
 
 Milliseconds, 5 runs each, from `java -cp out Bench`.
 
-| maze | Kruskal | Prim |
-|---|---|---|
-| 100 x 100 | | |
-| 300 x 300 | | |
-| 1000 x 1000 | | |
+| maze         | Kruskal                             | Prim                                |
+|--------------|-------------------------------------|-------------------------------------|
+| 100 x 100    | 13 7 5 16 17  avg 12                | 21 5 4 6 5  avg 8                   |
+| 300 x 300    | 103 85 57 64 46  avg 71             | 60 62 57 56 60  avg 59              |
+| 1000 x 1000  | 1085 1060 1157 1497 1567  avg 1273  | 1984 2078 2712 2992 2912  avg 2535  |
 
 What do the numbers say about how the time grows? Two or three sentences.
 
@@ -63,18 +63,18 @@ What do the numbers say about how the time grows? Two or three sentences.
 
 n is the number of cells, m the number of walls (or slides). Fill in every algorithm you wrote.
 
-| algorithm | time | space | assumptions |
-|---|---|---|---|
-| DSU find and union | | | |
-| Kruskal | | | |
-| Prim | | | |
-| DFS | | | |
-| Kosaraju | | | |
-| Route in the zone graph | | | |
+| algorithm               | time                            | space       | assumptions                                                |
+|-------------------------|---------------------------------|-------------|------------------------------------------------------------|
+| DSU find and union      | amortized O(α(n)) per operation | O(n)        | path compression and union by size                         |
+| Kruskal                 | O(m log m)                      | O(n + m)    | walls sorted by cost; connected graph                      |
+| Prim                    | O((n + m) log m)                | O(n + m)    | priority queue; connected graph                            |
+| DFS                     | O(n + m)                        | O(n + m)    | maze adjacency built from the broken walls                 |
+| Kosaraju                | O(n + m)                        | O(n + m)    | directed slide graph and its reverse                       |
+| Route in the zone graph | expected O(m + Z + E_z)         | O(Z + E_z)  | hash maps for zone edges; zones are topologically numbered |
 
 ## Before you submit
 
-- data/walls.txt, data/slides.txt and output/maze.png are in the repository.
+- data/walls.txt, data/slides.txt and output/maze.png are in the repository. 
 - `java tools/Check.java` shows all examples right.
 - This README is filled in, the program output and the section AI use included.
 - The work is pushed to main (at least one commit per mission) and the repository is public.
